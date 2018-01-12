@@ -2,18 +2,18 @@ package masr.math.controller;
 
 import masr.math.entity.Fraction;
 import masr.math.util.FractionGeneratorUtil;
+import masr.math.validator.DecimalToFractionValidator;
 import masr.math.vo.ExerciseVO;
 import masr.math.vo.FractionVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +29,19 @@ public class DecimalToFractionController {
 
     private static final Supplier<Fraction> PROPER_FRACTION_FUNCTION = FractionGeneratorUtil::generateProperFractionFromDecimal;
     private static final Supplier<Fraction> IMPROPER_FRACTION_FUNCTION = FractionGeneratorUtil::generateImproperFractionFromDecimal;
+
+    private final DecimalToFractionValidator decimalToFractionValidator;
+
+    @Autowired
+    public DecimalToFractionController(DecimalToFractionValidator decimalToFractionValidator) {
+        this.decimalToFractionValidator = decimalToFractionValidator;
+    }
+
+    @SuppressWarnings("unused") // Invoked by Spring Boot
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(decimalToFractionValidator);
+    }
 
     @RequestMapping(value = "/decimalToFraction", method = RequestMethod.GET)
     public ModelAndView showForm() {
@@ -59,7 +72,7 @@ public class DecimalToFractionController {
     }
 
     private List<FractionVO> initFractionsVO() {
-        List<FractionVO> emtpyFractions =  new ArrayList<>();
+        List<FractionVO> emtpyFractions = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PROBLEMS; i++) {
             emtpyFractions.add(new FractionVO());
         }
@@ -67,15 +80,31 @@ public class DecimalToFractionController {
     }
 
     @RequestMapping(value = "/decimalToFraction/grade", method = RequestMethod.POST)
-    public String grade(@Valid @ModelAttribute(NAME) ExerciseVO exerciseVO, BindingResult result, ModelMap modelMap) {
-        modelMap.addAttribute("isGraded", true);
+    public String grade(@Validated @ModelAttribute(NAME) ExerciseVO exerciseVO, BindingResult result, ModelMap modelMap) {
+        if (!result.hasErrors()) {
+            modelMap.addAttribute("isGraded", true);
+            gradeAnswers(exerciseVO);
+        }
+        return "decimalToFraction";
+    }
+
+    private void gradeAnswers(@Validated @ModelAttribute(NAME) ExerciseVO exerciseVO) {
         for (int i = 0; i < NUMBER_OF_PROBLEMS; i++) {
             Fraction fraction = exerciseVO.getFractions().get(i);
             FractionVO answer = exerciseVO.getResult().get(i);
-            answer.setCorrect(fraction.getNumerator() == Integer.parseInt(answer.getNumerator())
-                && fraction.getDenominator() == Integer.parseInt(answer.getDenominator()));
+            answer.setCorrect(isCorrectNumeratorAndDenominator(fraction, answer));
         }
-        System.out.println(result.hasErrors());
-        return "decimalToFraction";
+    }
+
+    private boolean isCorrectNumeratorAndDenominator(Fraction fraction, FractionVO answer) {
+        return isSameNumerator(fraction, answer) && isSameDenominator(fraction, answer);
+    }
+
+    private boolean isSameDenominator(Fraction fraction, FractionVO answer) {
+        return fraction.getDenominator() == Integer.parseInt(answer.getDenominator().trim());
+    }
+
+    private boolean isSameNumerator(Fraction fraction, FractionVO answer) {
+        return fraction.getNumerator() == Integer.parseInt(answer.getNumerator().trim());
     }
 }

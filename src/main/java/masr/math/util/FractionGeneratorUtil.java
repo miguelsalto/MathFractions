@@ -2,6 +2,7 @@ package masr.math.util;
 
 import masr.math.entity.Fraction;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 public class FractionGeneratorUtil {
@@ -10,20 +11,21 @@ public class FractionGeneratorUtil {
     static final int MAX_VALUE_FOR_DEFAULT_FRACTIONS = 999;
     private static final double MAX_DENOMINATOR_FROM_DECIMAL = 1000.0;
 
-    public static Fraction generateImproperFraction() {
+    static Fraction generateImproperFraction() {
         int numerator = generateInt();
         int denominator = generateInt(numerator - 1);
         return new Fraction(numerator, denominator);
     }
 
-    public static Fraction generateProperFraction() {
+    static Fraction generateProperFraction() {
         int numerator = getNumeratorDifferentToMax();
         int denominator = generateInt(numerator + 1, MAX_VALUE_FOR_DEFAULT_FRACTIONS);
         return new Fraction(numerator, denominator);
     }
 
     public static Fraction generateImproperFractionFromDecimal() {
-        return new Fraction(generateInt() + generateDecimal());
+        double sum = BigDecimal.valueOf(generateInt()).add(BigDecimal.valueOf(generateDecimal())).doubleValue();
+        return new Fraction(sum);
     }
 
     public static Fraction generateProperFractionFromDecimal() {
@@ -38,7 +40,7 @@ public class FractionGeneratorUtil {
         return numerator;
     }
 
-    static double generateDecimal() {
+    private static double generateDecimal() {
         return generateInt(MAX_VALUE_FOR_DEFAULT_FRACTIONS) / MAX_DENOMINATOR_FROM_DECIMAL;
     }
 

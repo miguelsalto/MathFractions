@@ -7,7 +7,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"masr.math.controller"})
+@ComponentScan({"masr.math.controller", "masr.math.validator"})
 public class MathFractionsApplication extends SpringBootServletInitializer {
 
     @Override

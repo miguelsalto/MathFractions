@@ -1,0 +1,43 @@
+.table-cell,
+.table-cell-border-all,
+.table-cell-border-up,
+.table-cell-border-down,
+.table-cell-border-up-down,
+.table-cell-border-up-down-right {
+    display: table-cell;
+    padding: 3px 10px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.table-cell-border-all {
+    border: thin solid;
+}
+
+.table-cell-border-up,
+.table-cell-border-up-down,
+.table-cell-border-up-down-right {
+    border-top: thin solid;
+}
+
+.table-cell-border-down,
+.table-cell-border-up-down,
+.table-cell-border-up-down-right {
+    border-bottom: thin solid;
+}
+
+.table-cell-border-up-down-right {
+    border-right: thin solid;
+}
+
+.has-error {
+    border: 1px solid red;
+}
+
+.ok-label {
+    color: green;
+}
+
+.error-label {
+    color: red;
+}
