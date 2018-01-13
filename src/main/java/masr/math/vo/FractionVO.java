@@ -3,9 +3,11 @@ package masr.math.vo;
 import java.io.Serializable;
 
 public class FractionVO implements Serializable {
-    private static final long serialVersionUID = -3176426989855983674L;
+    private static final long serialVersionUID = 8455931749889615323L;
 
     private boolean correct;
+    private boolean solved;
+
     private String numerator;
     private String denominator;
     private String wholeNumber;
@@ -17,6 +19,14 @@ public class FractionVO implements Serializable {
 
     public void setCorrect(boolean correct) {
         this.correct = correct;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 
     public String getNumerator() {

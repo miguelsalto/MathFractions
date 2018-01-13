@@ -49,14 +49,25 @@ public class DecimalToFractionValidator implements Validator {
     }
 
     private void validateInteger(Errors errors, String numeratorField, String field) {
-        if (StringUtils.isNoneBlank(field)) {
-            try {
-                //noinspection ResultOfMethodCallIgnored
-                Integer.parseInt(field.trim());
-            } catch (NumberFormatException e) {
-                errors.rejectValue(numeratorField, "error.incorrect.format");
-            }
+        if (StringUtils.isNotBlank(field) && !isValidInteger(field)) {
+            errors.rejectValue(numeratorField, "error.incorrect.format");
         }
+    }
+
+    public static boolean isValidInteger(String s) {
+        return StringUtils.isNotBlank(s) && isValidIntegerForNonBlankString(s);
+    }
+
+    private static boolean isValidIntegerForNonBlankString(String s) {
+        boolean valid;
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            Integer.parseInt(s);
+            valid = true;
+        } catch (NumberFormatException ignore) {
+            valid = false;
+        }
+        return valid;
     }
 
 

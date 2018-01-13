@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static masr.math.constants.AppConstants.NUMBER_OF_PROBLEMS;
+import static masr.math.validator.DecimalToFractionValidator.isValidInteger;
 
 @Controller
 @SessionAttributes({DecimalToFractionController.NAME})
@@ -82,18 +83,39 @@ public class DecimalToFractionController {
     @RequestMapping(value = "/decimalToFraction/grade", method = RequestMethod.POST)
     public String grade(@Validated @ModelAttribute(NAME) ExerciseVO exerciseVO, BindingResult result, ModelMap modelMap) {
         if (!result.hasErrors()) {
-            modelMap.addAttribute("isGraded", true);
-            gradeAnswers(exerciseVO);
+            markAsGraded(modelMap);
+            evaluateAnswers(exerciseVO, false);
         }
         return "decimalToFraction";
     }
 
-    private void gradeAnswers(@Validated @ModelAttribute(NAME) ExerciseVO exerciseVO) {
+    @RequestMapping(value = "/decimalToFraction/verify", method = RequestMethod.POST)
+    public String verify(@ModelAttribute(NAME) ExerciseVO exerciseVO, @SuppressWarnings("unused") BindingResult result,
+                         ModelMap modelMap) {
+        markAsGraded(modelMap);
+        evaluateAnswers(exerciseVO, true);
+        return "decimalToFraction";
+    }
+
+    private void markAsGraded(ModelMap modelMap) {
+        modelMap.addAttribute("isGraded", true);
+    }
+
+    private void evaluateAnswers(ExerciseVO exerciseVO, boolean optional) {
         for (int i = 0; i < NUMBER_OF_PROBLEMS; i++) {
             Fraction fraction = exerciseVO.getFractions().get(i);
             FractionVO answer = exerciseVO.getResult().get(i);
-            answer.setCorrect(isCorrectNumeratorAndDenominator(fraction, answer));
+            if (!optional || isNumeratorAndDenominatorDefined(answer)) {
+                answer.setCorrect(isCorrectNumeratorAndDenominator(fraction, answer));
+                answer.setSolved(true);
+            } else {
+                answer.setSolved(false);
+            }
         }
+    }
+
+    private boolean isNumeratorAndDenominatorDefined(FractionVO answer) {
+        return isValidInteger(answer.getNumerator()) && isValidInteger(answer.getDenominator());
     }
 
     private boolean isCorrectNumeratorAndDenominator(Fraction fraction, FractionVO answer) {

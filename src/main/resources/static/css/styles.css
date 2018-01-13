@@ -1,3 +1,12 @@
+.table {
+    display: inline-block;
+    width: 100%;
+}
+
+.table-row {
+    display: table-row;
+}
+
 .table-cell,
 .table-cell-border-all,
 .table-cell-border-up,
@@ -40,4 +49,20 @@
 
 .error-label {
     color: red;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.center {
+    margin: auto;
+}
+
+.min-width {
+    min-width: 80px;
 }
