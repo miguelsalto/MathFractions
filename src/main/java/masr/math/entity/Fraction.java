@@ -53,7 +53,7 @@ public class Fraction implements Serializable {
         this.numerator = numerator;
     }
 
-    void setDecimal(double decimal) {
+    private void setDecimal(double decimal) {
         this.decimal = decimal;
     }
 

@@ -11,8 +11,6 @@ public class MixedFractionTest {
     public void testEqualsForEquivalentFractions() {
         assertThat(new MixedFraction(1, 2, 3),
                 is(new MixedFraction(1, 2, 3)));
-        assertThat(new MixedFraction(1, 1, 4), is(new MixedFraction(1.25)));
-        assertThat(new MixedFraction(2.255), is(new MixedFraction(2, 51, 200)));
     }
 
     @Test
@@ -22,9 +20,4 @@ public class MixedFractionTest {
         assertThat(fraction1, not(fraction2));
     }
 
-    @Test
-    public void testCorrectWholeNumberWhenCreatingFractionByDecimal() {
-        assertThat(new MixedFraction(0.333).getWholeNumber(), is(0));
-        assertThat(new MixedFraction(2.25).getWholeNumber(), is(2));
-    }
 }

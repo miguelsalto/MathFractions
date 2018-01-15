@@ -2,7 +2,8 @@ package masr.math.vo;
 
 import java.io.Serializable;
 
-public class FractionVO implements Serializable {
+@SuppressWarnings("unused") // Used by view
+public class AnswerVO implements Serializable {
     private static final long serialVersionUID = 8455931749889615323L;
 
     private boolean correct;

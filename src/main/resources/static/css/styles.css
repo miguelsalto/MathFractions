@@ -66,3 +66,16 @@
 .min-width {
     min-width: 80px;
 }
+
+.small-fraction {
+    min-width: 30px;
+}
+
+.whole-number {
+    min-width: 40px;
+}
+
+.score {
+    font-size: 24px;
+    padding: 20px 20px;
+}

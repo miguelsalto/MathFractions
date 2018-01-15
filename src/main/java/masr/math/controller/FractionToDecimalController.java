@@ -1,7 +1,7 @@
 package masr.math.controller;
 
 import masr.math.entity.Fraction;
-import masr.math.validator.FractionValidator;
+import masr.math.validator.DecimalValidator;
 import masr.math.vo.AnswerVO;
 import masr.math.vo.ExerciseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +21,21 @@ import java.util.List;
 import static masr.math.constants.AppConstants.EXERCISE_ATTR_NAME;
 import static masr.math.constants.AppConstants.NUMBER_OF_PROBLEMS;
 import static masr.math.util.FractionGeneratorUtil.generateProperAndImproperFractions;
-import static masr.math.validator.FractionValidator.isValidInteger;
+import static masr.math.validator.BaseValidator.isValidDecimal;
 
 @Controller
 @SessionAttributes({EXERCISE_ATTR_NAME})
-public class DecimalToFractionController extends BaseController<Fraction> {
-    private static final String VIEW_NAME = "decimalToFraction";
+public class FractionToDecimalController extends BaseController<Fraction> {
+    private static final String VIEW_NAME = "fractionToDecimal";
 
-    private final FractionValidator fractionValidator;
+    private final DecimalValidator decimalValidator;
 
     @Autowired
-    public DecimalToFractionController(FractionValidator fractionValidator) {
-        this.fractionValidator = fractionValidator;
+    public FractionToDecimalController(DecimalValidator decimalValidator) {
+        this.decimalValidator = decimalValidator;
     }
 
-    @RequestMapping(value = "/decimalToFraction", method = RequestMethod.GET)
+    @RequestMapping(value = "/fractionToDecimal", method = RequestMethod.GET)
     public ModelAndView showPage() {
         return createModelAndView(VIEW_NAME);
     }
@@ -45,14 +45,14 @@ public class DecimalToFractionController extends BaseController<Fraction> {
         return generateProperAndImproperFractions(NUMBER_OF_PROBLEMS);
     }
 
-    @RequestMapping(value = "/decimalToFraction/grade", method = RequestMethod.POST)
+    @RequestMapping(value = "/fractionToDecimal/grade", method = RequestMethod.POST)
     public String grade(@Validated @ModelAttribute(EXERCISE_ATTR_NAME) ExerciseVO<Fraction> exerciseVO, BindingResult result,
                         ModelMap modelMap) {
         updateModelForGrading(exerciseVO, result, modelMap);
         return VIEW_NAME;
     }
 
-    @RequestMapping(value = "/decimalToFraction/verify", method = RequestMethod.POST)
+    @RequestMapping(value = "/fractionToDecimal/verify", method = RequestMethod.POST)
     public String verify(@ModelAttribute(EXERCISE_ATTR_NAME) ExerciseVO<Fraction> exerciseVO, @SuppressWarnings("unused") BindingResult result,
                          ModelMap modelMap) {
         updateModelForVerifying(exerciseVO, modelMap);
@@ -60,21 +60,17 @@ public class DecimalToFractionController extends BaseController<Fraction> {
     }
 
     @Override
-    boolean isAnswerCompleteForEvaluation(AnswerVO answer) {
-        return isNumeratorAndDenominatorDefined(answer);
+    Validator getValidator() {
+        return decimalValidator;
     }
 
-    private boolean isNumeratorAndDenominatorDefined(AnswerVO answer) {
-        return isValidInteger(answer.getNumerator()) && isValidInteger(answer.getDenominator());
+    @Override
+    boolean isAnswerCompleteForEvaluation(AnswerVO answer) {
+        return isValidDecimal(answer.getDecimal());
     }
 
     @Override
     boolean isCorrect(Fraction fraction, AnswerVO answer) {
-        return isCorrectNumeratorAndDenominator(fraction, answer);
-    }
-
-    @Override
-    Validator getValidator() {
-        return fractionValidator;
+        return isCorrectDecimal(fraction, answer);
     }
 }

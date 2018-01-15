@@ -5,25 +5,25 @@ import masr.math.entity.Fraction;
 import java.io.Serializable;
 import java.util.List;
 
-public class ExerciseVO implements Serializable {
+public class ExerciseVO<T extends Fraction> implements Serializable {
     private static final long serialVersionUID = 5860733021531449228L;
 
-    private List<Fraction> fractions;
-    private List<FractionVO> result;
+    private List<T> fractions;
+    private List<AnswerVO> result;
 
-    public List<Fraction> getFractions() {
+    public List<T> getFractions() {
         return fractions;
     }
 
-    public void setFractions(List<Fraction> fractions) {
+    public void setFractions(List<T> fractions) {
         this.fractions = fractions;
     }
 
-    public List<FractionVO> getResult() {
+    public List<AnswerVO> getResult() {
         return result;
     }
 
-    public void setResult(List<FractionVO> result) {
+    public void setResult(List<AnswerVO> result) {
         this.result = result;
     }
 }

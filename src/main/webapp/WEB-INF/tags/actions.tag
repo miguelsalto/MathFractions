@@ -11,13 +11,16 @@
                        value="<spring:message code="glb.restart"/>"/>
             </div>
             <div class="table-cell">
-                <input type="submit" value="<spring:message code="glb.evaluate"/>"/>
-            </div>
-            <div class="table-cell">
                 <input type="button"
                        onclick="var form = document.getElementById('${formName}'); form.action='${verifyURL}'; form.submit();"
                        value="<spring:message code="glb.verify"/>"/>
             </div>
+            <div class="table-cell">
+                <input type="submit" value="<spring:message code="glb.evaluate"/>"/>
+            </div>
         </div>
+    </div>
+    <div class="table-row">
+        <a href="${pageContext.request.contextPath}/"><spring:message code="glb.return"/></a>
     </div>
 </div>
